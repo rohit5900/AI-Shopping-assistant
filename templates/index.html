@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en" class="no-js">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="AI-powered shopping assistant that provides expert product recommendations and shopping advice">
+    <meta name="keywords" content="shopping assistant, AI recommendations, product advice">
+    <meta name="robots" content="index, follow">
+    <meta name="author" content="Shopping AI Assistant">
+    <meta name="theme-color" content="#6b46c1" media="(prefers-color-scheme: light)">
+    <meta name="theme-color" content="#4c1d95" media="(prefers-color-scheme: dark)">
+    <meta name="color-scheme" content="light dark">
+    
+    <!-- Security headers -->
+    <meta http-equiv="X-Content-Type-Options" content="nosniff">
+    <meta http-equiv="X-XSS-Protection" content="1; mode=block">
+    
+    <title>Shopping AI Assistant - Get Expert Product Recommendations</title>
+    
+    <!-- Preconnect to external resources -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- App styles -->
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🛍️</text></svg>">
+    
+    <!-- Accessibility improvements -->
+    <script>
+        window.addEventListener('load', function() {
+            document.body.classList.add('js-enabled');
+            document.documentElement.classList.remove('no-js');
+        });
+    </script>
+</head>
+<body>
+  <div class="loading-indicator hidden">
+    <div class="loading-spinner"></div>
+  </div>
+    <div class="container">
+        <header class="header" role="banner">
+            <div class="header-content">
+                <h1>Shopping AI Assistant</h1>
+                <p class="subtitle">Get expert recommendations with our AI-powered shopping assistant</p>
+            </div>
+            <button id="themeToggle" 
+                    class="theme-toggle" 
+                    aria-label="Toggle dark mode" 
+                    aria-pressed="false"
+                    title="Switch between light and dark theme">
+                <svg class="sun-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                    <path d="M12 16C14.2091 16 16 14.2091 16 12C16 9.79086 14.2091 8 12 8C9.79086 8 8 9.79086 8 12C8 14.2091 9.79086 16 12 16Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M12 2V4M12 20V22M4 12H2M6.31412 6.31412L4.8999 4.8999M17.6859 6.31412L19.1001 4.8999M6.31412 17.69L4.8999 19.1042M17.6859 17.69L19.1001 19.1042M22 12H20" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                <svg class="moon-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+            </button>
+        </header>
+
+        <main role="main">
+            <div class="input-area">
+                <form id="chatForm" class="chat-form" novalidate>
+                    <div class="input-wrapper">
+                        <button type="button" 
+                                class="plus-button" 
+                                id="plusButton" 
+                                aria-label="Add image"
+                                aria-expanded="false"
+                                aria-controls="imageOptions">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                                <path d="M12 5V19M5 12H19" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                        </button>
+                        <div class="image-options" 
+                             id="imageOptions" 
+                             hidden 
+                             role="menu" 
+                             aria-label="Image upload options">
+                            <button type="button" 
+                                    class="image-option" 
+                                    id="uploadImage"
+                                    role="menuitem">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                                    <path d="M21 15V19C21 19.5304 20.7893 20.0391 20.4142 20.4142C20.0391 20.7893 19.5304 21 19 21H5C4.46957 21 3.96086 20.7893 3.58579 20.4142C3.21071 20.0391 3 19.5304 3 19V15" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                    <path d="M17 8L12 3L7 8" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                    <path d="M12 3V15" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                </svg>
+                                Upload Image
+                            </button>
+                            <button type="button" 
+                                    class="image-option" 
+                                    id="takePhoto"
+                                    role="menuitem">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                                    <path d="M23 19C23 19.5304 22.7893 20.0391 22.4142 20.4142C22.0391 20.7893 21.5304 21 21 21H3C2.46957 21 1.96086 20.7893 1.58579 20.4142C1.21071 20.0391 1 19.5304 1 19V8C1 7.46957 1.21071 6.96086 1.58579 6.58579C1.96086 6.21071 2.46957 6 3 6H7L9 3H15L17 6H21C21.5304 6 22.0391 6.21071 22.4142 6.58579C22.7893 6.96086 23 7.46957 23 8V19Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                    <path d="M12 17C14.2091 17 16 15.2091 16 13C16 10.7909 14.2091 9 12 9C9.79086 9 8 10.7909 8 13C8 15.2091 9.79086 17 12 17Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                </svg>
+                                Take Photo
+                            </button>
+                        </div>
+                        <textarea 
+                            id="userInput" 
+                            name="userInput"
+                            placeholder="Ask about products (e.g. 'Best wireless headphones under $200')"
+                            aria-label="Your message"
+                            rows="1"
+                            autocomplete="off"
+                            maxlength="500"
+                            required
+                        ></textarea>
+                        <button 
+                            type="submit" 
+                            id="sendButton" 
+                            class="send-button"
+                            aria-label="Send message"
+                            disabled
+                        >
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                                <path d="M22 2L11 13" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                <path d="M22 2L15 22L11 13L2 9L22 2Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                            <span>Send</span>
+                            <span class="sr-only">Loading...</span>
+                        </button>
+                    </div>
+                    <div class="char-counter" aria-live="polite">
+                        <span id="charCount">0</span>/500
+                    </div>
+                </form>
+            </div>
+
+            <div class="response-container" 
+                 id="chatContainer" 
+                 role="log" 
+                 aria-live="polite"
+                 aria-atomic="false">
+                <!-- Messages will be added here dynamically -->
+            </div>
+
+            <div id="errorMessage" 
+                 class="error-message" 
+                 role="alert" 
+                 aria-live="assertive" 
+                 hidden>
+                An error occurred. Please try again.
+            </div>
+        </main>
+        
+        <footer class="footer" role="contentinfo">
+            <p>Powered by <a href="https://ai.google.dev/" target="_blank" rel="noopener noreferrer">Google Gemini</a></p>
+        </footer>
+    </div>
+
+    <!-- Load scripts -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+    <script src="{{ url_for('static', filename='script.js') }}" defer></script>
+    
+    <!-- Fallback for no JavaScript -->
+    <noscript>
+        <div class="noscript-message">
+            This application requires JavaScript to function. Please enable JavaScript in your browser settings.
+        </div>
+    </noscript>
+</body>
+</html>
